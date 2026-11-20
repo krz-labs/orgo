@@ -889,11 +889,11 @@ fn timestamp_html(ts: &crate::model::Timestamp) -> String {
     } else {
         "timestamp inactive"
     };
-    let one = |dt: &chrono::NaiveDateTime, text: String| {
+    let one = |dt: &jiff::civil::DateTime, text: String| {
         let attr = if ts.has_time {
-            dt.format("%Y-%m-%dT%H:%M").to_string()
+            dt.strftime("%Y-%m-%dT%H:%M").to_string()
         } else {
-            dt.format("%Y-%m-%d").to_string()
+            dt.strftime("%Y-%m-%d").to_string()
         };
         format!(
             "<time class=\"{class}\" datetime=\"{}\">{}</time>",
@@ -901,11 +901,11 @@ fn timestamp_html(ts: &crate::model::Timestamp) -> String {
             escape_html(&text)
         )
     };
-    let text_of = |dt: &chrono::NaiveDateTime| {
+    let text_of = |dt: &jiff::civil::DateTime| {
         if ts.has_time {
-            dt.format("%Y-%m-%d %H:%M").to_string()
+            dt.strftime("%Y-%m-%d %H:%M").to_string()
         } else {
-            dt.format("%Y-%m-%d").to_string()
+            dt.strftime("%Y-%m-%d").to_string()
         }
     };
 
@@ -913,7 +913,7 @@ fn timestamp_html(ts: &crate::model::Timestamp) -> String {
     if let Some(end) = &ts.end {
         out.push_str("&#8211;");
         let text = if end.date() == ts.start.date() && ts.has_time {
-            end.format("%H:%M").to_string()
+            end.strftime("%H:%M").to_string()
         } else {
             text_of(end)
         };

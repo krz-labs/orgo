@@ -10,7 +10,7 @@
 //! snapshots share one representation (spec §4, §5).
 
 use camino::Utf8PathBuf;
-use chrono::NaiveDateTime;
+use jiff::civil::DateTime;
 use serde::{Deserialize, Serialize};
 
 /// Content hash of raw source bytes. blake3 (spec §4.1). Serialized as hex.
@@ -255,7 +255,7 @@ pub enum LinkTarget {
 pub struct Timestamp {
     /// `<...>` vs `[...]`.
     pub active: bool,
-    pub start: NaiveDateTime,
-    pub end: Option<NaiveDateTime>,
+    pub start: DateTime,
+    pub end: Option<DateTime>,
     pub has_time: bool,
 }

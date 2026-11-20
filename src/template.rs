@@ -540,7 +540,7 @@ fn add_filters(env: &mut Environment<'static>, base_url: &str) {
                 format!("cannot read a date out of {raw:?} for an RSS pubDate"),
             )
         })?;
-        let date = chrono::NaiveDate::parse_from_str(&iso, "%Y-%m-%d").map_err(|e| {
+        let date = jiff::civil::Date::strptime("%Y-%m-%d", &iso).map_err(|e| {
             minijinja::Error::new(
                 minijinja::ErrorKind::InvalidOperation,
                 format!("{iso} is not a valid date: {e}"),
@@ -548,9 +548,8 @@ fn add_filters(env: &mut Environment<'static>, base_url: &str) {
         })?;
         // Org dates carry no timezone, so midnight UTC is the honest reading of one.
         Ok(date
-            .and_hms_opt(0, 0, 0)
-            .expect("midnight is a valid time")
-            .format("%a, %d %b %Y %H:%M:%S +0000")
+            .to_datetime(jiff::civil::Time::midnight())
+            .strftime("%a, %d %b %Y %H:%M:%S +0000")
             .to_string())
     });
 }

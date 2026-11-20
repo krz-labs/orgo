@@ -24,7 +24,7 @@
 //! org's exporter leaves it alone: it does not recalculate on export either.
 
 use camino::Utf8Path;
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
+use jiff::civil::{Date, DateTime, Time};
 
 use crate::model::{
     BlockParams, Bullet, Checkbox, ContentHash, Document, Element, Heading, Keywords, Link,
@@ -1390,7 +1390,7 @@ fn try_timestamp(chars: &[char], i: usize) -> Option<(Object, usize)> {
 fn parse_stamp(
     chars: &[char],
     i: usize,
-) -> Option<(NaiveDateTime, Option<NaiveDateTime>, bool, usize)> {
+) -> Option<(DateTime, Option<DateTime>, bool, usize)> {
     let open = *chars.get(i)?;
     let close = match open {
         '<' => '>',
@@ -1400,10 +1400,10 @@ fn parse_stamp(
     let end = (i + 1..chars.len()).find(|&k| chars[k] == close)?;
     let body: String = chars[i + 1..end].iter().collect();
     let mut parts = body.split_whitespace();
-    let date = NaiveDate::parse_from_str(parts.next()?, "%Y-%m-%d").ok()?;
+    let date = Date::strptime("%Y-%m-%d", parts.next()?).ok()?;
 
     let mut has_time = false;
-    let mut start_time = NaiveTime::MIN;
+    let mut start_time = Time::midnight();
     let mut end_time = None;
     for part in parts {
         if let Some((from, to)) = parse_time_spec(part) {
@@ -1413,22 +1413,22 @@ fn parse_stamp(
         }
     }
     Some((
-        date.and_time(start_time),
-        end_time.map(|t| date.and_time(t)),
+        date.to_datetime(start_time),
+        end_time.map(|t| date.to_datetime(t)),
         has_time,
         end + 1,
     ))
 }
 
 /// `HH:MM` or `HH:MM-HH:MM`.
-fn parse_time_spec(s: &str) -> Option<(NaiveTime, Option<NaiveTime>)> {
+fn parse_time_spec(s: &str) -> Option<(Time, Option<Time>)> {
     let (from, to) = match s.split_once('-') {
         Some((a, b)) => (a, Some(b)),
         None => (s, None),
     };
-    let from = NaiveTime::parse_from_str(from, "%H:%M").ok()?;
+    let from = Time::strptime("%H:%M", from).ok()?;
     let to = match to {
-        Some(b) => Some(NaiveTime::parse_from_str(b, "%H:%M").ok()?),
+        Some(b) => Some(Time::strptime("%H:%M", b).ok()?),
         None => None,
     };
     Some((from, to))
