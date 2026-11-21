@@ -5,7 +5,7 @@ Read the content below for the release process.
 ** Where the repository lives
 =origin= is gitbay (=ssh://git@gitbay.org/krz/orgo.git=), which is where the issues, merge
 requests, builds and releases are. It push-mirrors to
-=https://github.com/krazywarez/orgo=, tags included, but nothing in a release depends on
+=https://github.com/krz-labs/orgo=, tags included, but nothing in a release depends on
 that mirror any more — it is a copy, not a step.
 
 ** What runs where
