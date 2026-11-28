@@ -8,7 +8,7 @@ readme = "README.md"
 # crates.io caps a keyword at 20 characters, which "static-site-generator" is not.
 keywords = ["org-mode", "static-site", "ssg", "emacs", "blog"]
 categories = ["command-line-utilities", "text-processing"]
-repository = "https://gitbay.org/krz/orgo"
+repository = "https://github.com/krz-labs/orgo"
 homepage = "https://orgo.krz.sh/"
 
 # The compiler floor. orgo's own code needs 1.82 (`Option::is_none_or`); the floor is
