@@ -31,7 +31,7 @@ cargo install orgo
 Or from a checkout, if you want to build the version you can read:
 
 ```sh
-git clone https://gitbay.org/krz/orgo
+git clone https://github.com/krz-labs/orgo
 cd orgo
 cargo install --path .
 ```
